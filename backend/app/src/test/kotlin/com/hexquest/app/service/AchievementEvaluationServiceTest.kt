@@ -2,13 +2,13 @@ package com.hexquest.app.service
 
 import com.hexquest.domain.*
 import com.hexquest.infrastructure.repository.*
+import com.hexquest.app.event.AchievementEvent
+import com.hexquest.app.event.AchievementEventType
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito.*
+import org.mockito.kotlin.*
 import org.springframework.context.ApplicationEventPublisher
-import java.util.Optional
 
 class AchievementEvaluationServiceTest {
 
@@ -21,10 +21,10 @@ class AchievementEvaluationServiceTest {
 
     @BeforeEach
     fun setup() {
-        achievementRepository = mock(AchievementRepository::class.java)
-        userAchievementRepository = mock(UserAchievementRepository::class.java)
-        progressEntryRepository = mock(ProgressEntryRepository::class.java)
-        eventPublisher = mock(ApplicationEventPublisher::class.java)
+        achievementRepository = mock()
+        userAchievementRepository = mock()
+        progressEntryRepository = mock()
+        eventPublisher = mock()
 
         service = AchievementEvaluationService(
             achievementRepository,
@@ -34,12 +34,23 @@ class AchievementEvaluationServiceTest {
         )
     }
 
-    private fun createUser(id: Long) = User(username = "tester$id", email = "test$id@test.com", password = "pwd").apply { this.id = id }
-    private fun createTask(id: Long) = Task(name = "Test Task", unitLabel = "wins").apply { this.id = id }
-    
+    private fun createUser(id: Long) = User(
+        id = id,
+        username = "tester$id",
+        email = "test$id@test.com",
+        passwordHash = "hashed_pwd"
+    )
+
+    private fun createTask(id: Long) = Task(
+        id = id,
+        name = "Test Task",
+        unitLabel = "wins"
+    )
+
     private fun createAchievement(id: Long, typeName: String, threshold: Int? = null, minThreshold: Int? = null): Achievement {
         val type = AchievementType(name = typeName)
         return Achievement(
+            id = id,
             task = createTask(1L),
             name = "Achv",
             description = null,
@@ -49,93 +60,106 @@ class AchievementEvaluationServiceTest {
             type = type,
             thresholdValue = threshold,
             minThreshold = minThreshold
-        ).apply { this.id = id }
+        )
     }
 
     @Test
-    fun `test Threshold First Unlock`() {
+    fun `threshold - first unlock when cumulative total meets threshold`() {
         val user = createUser(1L)
         val task = createTask(1L)
         val achievement = createAchievement(10L, "THRESHOLD", threshold = 10)
 
-        `when`(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
-        `when`(userAchievementRepository.existsByUserIdAndAchievementId(1L, 10L)).thenReturn(false)
+        whenever(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
+        whenever(userAchievementRepository.existsByUserIdAndAchievementId(1L, 10L)).thenReturn(false)
 
         service.evaluateTaskAchievements(user, task, 10)
 
-        verify(userAchievementRepository, times(1)).save(any(UserAchievement::class.java))
+        verify(userAchievementRepository, times(1)).save(any<UserAchievement>())
+        verify(eventPublisher, times(1)).publishEvent(any<AchievementEvent>())
     }
 
     @Test
-    fun `test Supremacy First Unlock`() {
+    fun `threshold - no unlock when user already has achievement`() {
+        val user = createUser(1L)
+        val task = createTask(1L)
+        val achievement = createAchievement(10L, "THRESHOLD", threshold = 10)
+
+        whenever(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
+        whenever(userAchievementRepository.existsByUserIdAndAchievementId(1L, 10L)).thenReturn(true)
+
+        service.evaluateTaskAchievements(user, task, 15)
+
+        verify(userAchievementRepository, never()).save(any<UserAchievement>())
+    }
+
+    @Test
+    fun `supremacy - first unlock when no current holder`() {
         val user = createUser(1L)
         val task = createTask(1L)
         val achievement = createAchievement(10L, "SUPREMACY", minThreshold = 5)
 
-        `when`(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
-        `when`(userAchievementRepository.findByAchievementIdAndIsActiveTrue(10L)).thenReturn(null)
+        whenever(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
+        whenever(userAchievementRepository.findByAchievementIdAndIsActiveTrue(10L)).thenReturn(null)
 
         service.evaluateTaskAchievements(user, task, 5)
 
-        verify(userAchievementRepository, times(1)).save(any(UserAchievement::class.java))
+        verify(userAchievementRepository, times(1)).save(any<UserAchievement>())
     }
 
     @Test
-    fun `test Supremacy Transfer On Overtake`() {
+    fun `supremacy - transfers when new user strictly overtakes current holder`() {
         val oldUser = createUser(1L)
         val newUser = createUser(2L)
         val task = createTask(1L)
         val achievement = createAchievement(10L, "SUPREMACY", minThreshold = 5)
-        
+
         val activeRecord = UserAchievement(achievement = achievement, user = oldUser, isActive = true)
 
-        `when`(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
-        `when`(userAchievementRepository.findByAchievementIdAndIsActiveTrue(10L)).thenReturn(activeRecord)
-        
-        // Mock latest progress of the OLD user
-        val oldProgress = ProgressEntry(task = task, user = oldUser, delta = 1, cumulativeTotal = 10)
-        `when`(progressEntryRepository.findTopByTaskIdAndUserIdOrderByIdDesc(1L, 1L)).thenReturn(oldProgress)
+        whenever(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
+        whenever(userAchievementRepository.findByAchievementIdAndIsActiveTrue(10L)).thenReturn(activeRecord)
 
-        service.evaluateTaskAchievements(newUser, task, 11) // New user has 11, strictly > 10
+        val oldProgress = ProgressEntry(task = task, user = oldUser, delta = 1, cumulativeTotal = 10)
+        whenever(progressEntryRepository.findTopByTaskIdAndUserIdOrderByIdDesc(1L, 1L)).thenReturn(oldProgress)
+
+        service.evaluateTaskAchievements(newUser, task, 11)
 
         assertFalse(activeRecord.isActive)
-        // Two saves: one to deactivate old user, one to create new user record
-        verify(userAchievementRepository, times(2)).save(any(UserAchievement::class.java))
+        verify(userAchievementRepository, times(2)).save(any<UserAchievement>())
+        verify(eventPublisher, times(2)).publishEvent(any<AchievementEvent>()) // REVOKED + STOLEN
     }
 
     @Test
-    fun `test Supremacy No Transfer On Tie`() {
+    fun `supremacy - no transfer on tie, current holder retains`() {
         val oldUser = createUser(1L)
         val newUser = createUser(2L)
         val task = createTask(1L)
         val achievement = createAchievement(10L, "SUPREMACY", minThreshold = 5)
-        
+
         val activeRecord = UserAchievement(achievement = achievement, user = oldUser, isActive = true)
 
-        `when`(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
-        `when`(userAchievementRepository.findByAchievementIdAndIsActiveTrue(10L)).thenReturn(activeRecord)
-        
-        // Mock latest progress of the OLD user
+        whenever(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
+        whenever(userAchievementRepository.findByAchievementIdAndIsActiveTrue(10L)).thenReturn(activeRecord)
+
         val oldProgress = ProgressEntry(task = task, user = oldUser, delta = 1, cumulativeTotal = 10)
-        `when`(progressEntryRepository.findTopByTaskIdAndUserIdOrderByIdDesc(1L, 1L)).thenReturn(oldProgress)
+        whenever(progressEntryRepository.findTopByTaskIdAndUserIdOrderByIdDesc(1L, 1L)).thenReturn(oldProgress)
 
-        service.evaluateTaskAchievements(newUser, task, 10) // Tie case!
+        service.evaluateTaskAchievements(newUser, task, 10)
 
-        assertTrue(activeRecord.isActive) // Should not have disabled the old record
-        verify(userAchievementRepository, times(0)).save(any(UserAchievement::class.java))
+        assertTrue(activeRecord.isActive)
+        verify(userAchievementRepository, never()).save(any<UserAchievement>())
     }
 
     @Test
-    fun `test Supremacy Not Yet Met MinThreshold`() {
+    fun `supremacy - ignored when cumulative total below minThreshold`() {
         val user = createUser(1L)
         val task = createTask(1L)
         val achievement = createAchievement(10L, "SUPREMACY", minThreshold = 5)
 
-        `when`(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
+        whenever(achievementRepository.findByTaskId(1L)).thenReturn(listOf(achievement))
 
-        service.evaluateTaskAchievements(user, task, 4) // Only 4 total
+        service.evaluateTaskAchievements(user, task, 4)
 
-        verify(userAchievementRepository, times(0)).findByAchievementIdAndIsActiveTrue(anyLong())
-        verify(userAchievementRepository, times(0)).save(any(UserAchievement::class.java))
+        verify(userAchievementRepository, never()).findByAchievementIdAndIsActiveTrue(any())
+        verify(userAchievementRepository, never()).save(any<UserAchievement>())
     }
 }
