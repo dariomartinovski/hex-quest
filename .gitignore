@@ -1,0 +1,16 @@
+# Gradle Cache and Build outputs
+.gradle/
+build/
+out/
+gradle_output.txt
+out.txt
+
+# JetBrains IDEs (IntelliJ)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Temporary local files
+status.txt
+status_utf8.txt
