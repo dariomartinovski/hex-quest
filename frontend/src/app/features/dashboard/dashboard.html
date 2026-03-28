@@ -1,0 +1,100 @@
+<div class="p-4 sm:p-6 max-w-2xl mx-auto">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <h2 class="text-2xl font-extrabold text-gray-900 tracking-tight">Dashboard</h2>
+    <p class="text-sm text-gray-500 mt-1">Your tasks and achievements at a glance.</p>
+  </div>
+
+  <!-- Loading Skeleton -->
+  @if (isLoading()) {
+    <div class="space-y-4">
+      @for (i of [1,2,3]; track i) {
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 animate-pulse">
+          <div class="h-5 bg-gray-200 rounded w-1/2 mb-3"></div>
+          <div class="h-3 bg-gray-100 rounded w-3/4 mb-4"></div>
+          <div class="flex gap-2">
+            <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+            <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+            <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Tasks List -->
+  @if (!isLoading()) {
+    @if (tasks().length === 0) {
+      <div class="text-center py-16">
+        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-indigo-50 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-700">No tasks yet</h3>
+        <p class="text-sm text-gray-500 mt-1 mb-6">Create your first task to start tracking progress!</p>
+        <a routerLink="/tasks/new" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl shadow-md hover:bg-indigo-700 transition-all active:scale-95">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+          Create Task
+        </a>
+      </div>
+    } @else {
+      <div class="space-y-4">
+        @for (task of tasks(); track task.id) {
+          <a [routerLink]="['/tasks', task.id]" class="block bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-indigo-100 transition-all duration-200 group cursor-pointer">
+            
+            <!-- Task Header -->
+            <div class="flex items-start justify-between mb-1">
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ task.name }}</h3>
+                <p class="text-xs text-gray-400 mt-0.5">by {{ task.creatorUsername }} · Unit: {{ task.unitLabel }}</p>
+              </div>
+              <div class="shrink-0 ml-3 p-2 rounded-xl bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+
+            @if (task.description) {
+              <p class="text-sm text-gray-500 mb-3 line-clamp-2">{{ task.description }}</p>
+            }
+
+            <!-- Achievement Badges Row -->
+            @if (getTaskAchievements(task.id).length > 0) {
+              <div class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-50">
+                @for (achv of getTaskAchievements(task.id); track achv.id) {
+                  <div
+                    class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all"
+                    [class]="isUnlocked(achv.id) 
+                      ? 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200' 
+                      : 'bg-gray-100 text-gray-400 ring-1 ring-gray-200 opacity-50 grayscale'"
+                  >
+                    @if (achv.typeName === 'SUPREMACY') {
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd" />
+                      </svg>
+                    } @else {
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                      </svg>
+                    }
+                    {{ achv.name }}
+                  </div>
+                }
+              </div>
+            }
+          </a>
+        }
+      </div>
+
+      <!-- FAB: Create New Task -->
+      <a routerLink="/tasks/new" class="fixed bottom-24 right-5 sm:bottom-8 sm:right-8 w-14 h-14 bg-indigo-600 rounded-full text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center hover:bg-indigo-700 hover:scale-110 active:scale-95 transition-all z-30">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </a>
+    }
+  }
+</div>

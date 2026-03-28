@@ -7,6 +7,8 @@ import { LoginComponent } from './features/auth/login/login';
 import { RegisterComponent } from './features/auth/register/register';
 import { DashboardComponent } from './features/dashboard/dashboard';
 import { ProfileComponent } from './features/profile/profile';
+import { TaskDetailComponent } from './features/task-detail/task-detail';
+import { AddTaskComponent } from './features/add-task/add-task';
 
 export const routes: Routes = [
   {
@@ -16,6 +18,8 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'tasks/new', component: AddTaskComponent },
+      { path: 'tasks/:id', component: TaskDetailComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
