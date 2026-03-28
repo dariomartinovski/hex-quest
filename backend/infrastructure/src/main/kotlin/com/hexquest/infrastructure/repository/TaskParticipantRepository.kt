@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TaskParticipantRepository : JpaRepository<TaskParticipant, Long> {
+    fun existsByTaskIdAndUserId(taskId: Long, userId: Long): Boolean
+    fun countByTaskId(taskId: Long): Long
+    fun findByTaskId(taskId: Long): List<TaskParticipant>
 }

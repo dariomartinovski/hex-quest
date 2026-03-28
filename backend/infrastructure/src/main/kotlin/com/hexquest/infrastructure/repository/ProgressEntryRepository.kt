@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProgressEntryRepository : JpaRepository<ProgressEntry, Long> {
+    fun countByTaskId(taskId: Long): Long
+    fun findTopByTaskIdAndUserIdOrderByIdDesc(taskId: Long, userId: Long): ProgressEntry?
+    fun findTopByTaskIdAndUserIdOrderByRecordedAtDesc(taskId: Long, userId: Long): ProgressEntry?
 }
