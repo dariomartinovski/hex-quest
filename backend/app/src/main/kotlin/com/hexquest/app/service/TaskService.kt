@@ -16,7 +16,8 @@ class TaskService(
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,
     private val taskParticipantRepository: TaskParticipantRepository,
-    private val progressEntryRepository: ProgressEntryRepository
+    private val progressEntryRepository: ProgressEntryRepository,
+    private val achievementEvaluationService: AchievementEvaluationService
 ) {
     fun getAllTasks(): List<TaskResponse> {
         return taskRepository.findAll().map { task ->
@@ -101,7 +102,7 @@ class TaskService(
         )
         progressEntryRepository.save(newEntry)
         
-        // Phase 4: Trigger achievement engine evaluation here later
+        achievementEvaluationService.evaluateTaskAchievements(user, task, newTotal)
     }
 
     fun getLeaderboard(taskId: Long): List<ParticipantProgressDto> {

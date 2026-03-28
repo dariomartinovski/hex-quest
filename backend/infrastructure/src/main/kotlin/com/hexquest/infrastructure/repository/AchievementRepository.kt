@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface AchievementRepository : JpaRepository<Achievement, Long> {
+    fun findByTaskId(taskId: Long): List<Achievement>
 }
