@@ -1,4 +1,4 @@
-# AchievementProject
+# Hex Quest
 
 A mobile-first web application for tracking personal milestones and competitive achievements across multiple users. Users earn badges for hitting thresholds, and certain "supremacy" achievements dynamically transfer to whoever currently holds the record.
 
