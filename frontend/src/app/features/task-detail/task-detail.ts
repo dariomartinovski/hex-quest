@@ -5,11 +5,12 @@ import { TaskService, TaskDetailResponse, ParticipantProgress } from '../../core
 import { AchievementService, AchievementResponse, UserAchievementResponse } from '../../core/services/achievement.service';
 import { AuthService } from '../../core/services/auth.service';
 import { LogProgressModalComponent } from './log-progress-modal/log-progress-modal';
+import { AchievementUnlockOverlayComponent } from '../achievement-unlock-overlay/achievement-unlock-overlay';
 
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, LogProgressModalComponent],
+  imports: [CommonModule, RouterModule, LogProgressModalComponent, AchievementUnlockOverlayComponent],
   templateUrl: './task-detail.html'
 })
 export class TaskDetailComponent implements OnInit {
@@ -27,6 +28,10 @@ export class TaskDetailComponent implements OnInit {
   activeTab = signal<'leaderboard' | 'achievements' | 'activity'>('leaderboard');
   showProgressModal = signal(false);
   isLoading = signal(true);
+
+  // Unlock overlay queue
+  unlockQueue = signal<AchievementResponse[]>([]);
+  currentUnlock = signal<AchievementResponse | null>(null);
 
   ngOnInit() {
     this.taskId = Number(this.route.snapshot.paramMap.get('id'));
@@ -80,6 +85,25 @@ export class TaskDetailComponent implements OnInit {
   onProgressRecorded() {
     this.showProgressModal.set(false);
     this.loadData();
+  }
+
+  onAchievementsUnlocked(achievements: AchievementResponse[]) {
+    this.unlockQueue.set([...achievements]);
+    this.showNextUnlock();
+  }
+
+  showNextUnlock() {
+    const queue = this.unlockQueue();
+    if (queue.length > 0) {
+      this.currentUnlock.set(queue[0]);
+      this.unlockQueue.set(queue.slice(1));
+    } else {
+      this.currentUnlock.set(null);
+    }
+  }
+
+  dismissUnlock() {
+    this.showNextUnlock();
   }
 
   getRankEmoji(index: number): string {

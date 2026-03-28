@@ -109,7 +109,7 @@
                 [class]="isUnlocked(achv.id) ? 'ring-1 ring-indigo-200' : 'opacity-50 grayscale'"
               >
                 <!-- Badge Icon -->
-                <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
+                <div class="relative w-12 h-12 rounded-full flex items-center justify-center shrink-0"
                      [class]="isUnlocked(achv.id) ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-400'">
                   @if (achv.typeName === 'SUPREMACY') {
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
@@ -183,6 +183,15 @@
         [unitLabel]="task()!.unitLabel"
         (close)="showProgressModal.set(false)"
         (recorded)="onProgressRecorded()"
+        (achievementsUnlocked)="onAchievementsUnlocked($event)"
+      />
+    }
+
+    <!-- Achievement Unlock Celebration -->
+    @if (currentUnlock()) {
+      <app-achievement-unlock-overlay
+        [achievement]="currentUnlock()!"
+        (dismiss)="dismissUnlock()"
       />
     }
   }
