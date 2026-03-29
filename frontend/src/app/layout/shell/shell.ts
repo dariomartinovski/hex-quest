@@ -5,9 +5,9 @@ import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-shell',
-  standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule],
-  templateUrl: './shell.html'
+  templateUrl: './shell.html',
+  styleUrl: './shell.scss',
+  imports: [RouterOutlet, RouterModule, CommonModule]
 })
 export class ShellComponent implements OnInit {
   authService = inject(AuthService);

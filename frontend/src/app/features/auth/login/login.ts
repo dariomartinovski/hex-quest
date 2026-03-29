@@ -6,9 +6,9 @@ import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './login.html'
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class LoginComponent {
   private fb = inject(FormBuilder);
@@ -25,7 +25,7 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.invalid) return;
-    
+
     this.isSubmitting = true;
     this.errorMsg = null;
 

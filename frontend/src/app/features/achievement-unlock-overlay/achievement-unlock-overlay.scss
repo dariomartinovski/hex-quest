@@ -1,0 +1,143 @@
+@use '../../../styles/variables';
+
+:host {
+  display: contents;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+  }
+
+  &__confetti {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  &__card {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 24rem;
+    margin: 0 1.5rem;
+    animation: achievement-reveal 0.6s ease-out;
+  }
+
+  &__glow {
+    position: absolute;
+    inset: -2rem;
+    background: linear-gradient(to right, $amber-400, $yellow-500, $amber-400);
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.3;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  &__badge {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  &__text {
+    position: relative;
+  }
+
+  &__label {
+    color: $amber-300;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin: 0 0 0.5rem;
+    animation: fade-in-delay 0.8s ease-out 0.3s both;
+  }
+
+  &__title {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: $white;
+    margin: 0 0 0.5rem;
+    animation: fade-in-delay 0.8s ease-out 0.3s both;
+  }
+
+  &__description {
+    color: rgba($white, 0.7);
+    font-size: 0.875rem;
+    margin: 0;
+    animation: fade-in-delay 0.8s ease-out 0.3s both;
+  }
+
+  &__hint {
+    color: rgba($white, 0.4);
+    font-size: 0.75rem;
+    margin: 2rem 0 0;
+    animation: fade-in-delay 0.8s ease-out 0.3s both;
+  }
+}
+
+.badge-icon {
+  width: 8rem;
+  height: 8rem;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $amber-400, $yellow-500);
+  box-shadow: 0 20px 60px -10px rgba(245, 158, 11, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounce-in 0.5s ease-out;
+
+  svg {
+    width: 4rem;
+    height: 4rem;
+    color: $white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+}
+
+.confetti-particle {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  animation: confetti 3s ease-in forwards;
+}
+
+@keyframes confetti {
+  0%   { top: -5%;  opacity: 1; transform: rotate(0deg)   scale(1);   }
+  100% { top: 105%; opacity: 0; transform: rotate(720deg) scale(0.5); }
+}
+
+@keyframes achievement-reveal {
+  0%   { transform: scale(0.3); opacity: 0; }
+  50%  { transform: scale(1.05);            }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes fade-in-delay {
+  0%, 40% { opacity: 0; transform: translateY(10px); }
+  100%    { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes bounce-in {
+  0%   { transform: scale(0);    opacity: 0; }
+  50%  { transform: scale(1.15);             }
+  100% { transform: scale(1);    opacity: 1; }
+}

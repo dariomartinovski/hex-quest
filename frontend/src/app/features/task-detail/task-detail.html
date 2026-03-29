@@ -1,93 +1,99 @@
-<div class="max-w-2xl mx-auto">
+<div class="task-detail">
 
   <!-- Loading -->
   @if (isLoading()) {
-    <div class="p-6 space-y-4 animate-pulse">
-      <div class="h-8 bg-gray-200 rounded w-1/2"></div>
-      <div class="h-4 bg-gray-100 rounded w-3/4"></div>
-      <div class="h-48 bg-gray-100 rounded-2xl mt-6"></div>
+    <div class="skeleton">
+      <div class="skeleton__title"></div>
+      <div class="skeleton__subtitle"></div>
+      <div class="skeleton__body"></div>
     </div>
   }
 
   @if (!isLoading() && task()) {
     <!-- Task Header -->
-    <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 text-white p-6 pb-8">
-      <a routerLink="/dashboard" class="inline-flex items-center gap-1 text-indigo-200 hover:text-white text-sm mb-4 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+    <div class="task-header">
+      <a routerLink="/dashboard" class="task-header__back">
+        <svg xmlns="http://www.w3.org/2000/svg" class="task-header__back-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
         Back
       </a>
-      <h1 class="text-2xl font-extrabold tracking-tight">{{ task()!.name }}</h1>
+      <h1 class="task-header__title">{{ task()!.name }}</h1>
       @if (task()!.description) {
-        <p class="text-indigo-200 text-sm mt-1">{{ task()!.description }}</p>
+        <p class="task-header__description">{{ task()!.description }}</p>
       }
-      <div class="flex gap-4 mt-4 text-sm">
-        <div class="flex items-center gap-1.5 bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+      <div class="task-header__meta">
+        <div class="task-header__badge">
+          <svg xmlns="http://www.w3.org/2000/svg" class="task-header__badge-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
           {{ task()!.participantsCount }} participants
         </div>
-        <div class="flex items-center gap-1.5 bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-sm">
+        <div class="task-header__badge">
           {{ task()!.unitLabel }}
         </div>
       </div>
     </div>
 
     <!-- Tabs -->
-    <div class="sticky top-0 z-10 bg-white border-b border-gray-200 flex">
+    <div class="tabs">
       <button
         (click)="activeTab.set('leaderboard')"
-        class="flex-1 py-3.5 text-sm font-semibold text-center transition-colors relative"
-        [class]="activeTab() === 'leaderboard' ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
+        class="tabs__btn"
+        [class.tabs__btn--active]="activeTab() === 'leaderboard'"
       >
         Leaderboard
         @if (activeTab() === 'leaderboard') {
-          <div class="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-indigo-600 rounded-full"></div>
+          <div class="tabs__indicator"></div>
         }
       </button>
       <button
         (click)="activeTab.set('achievements')"
-        class="flex-1 py-3.5 text-sm font-semibold text-center transition-colors relative"
-        [class]="activeTab() === 'achievements' ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
+        class="tabs__btn"
+        [class.tabs__btn--active]="activeTab() === 'achievements'"
       >
         Achievements
         @if (activeTab() === 'achievements') {
-          <div class="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-indigo-600 rounded-full"></div>
+          <div class="tabs__indicator"></div>
         }
       </button>
       <button
         (click)="activeTab.set('activity')"
-        class="flex-1 py-3.5 text-sm font-semibold text-center transition-colors relative"
-        [class]="activeTab() === 'activity' ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
+        class="tabs__btn"
+        [class.tabs__btn--active]="activeTab() === 'activity'"
       >
         Activity
         @if (activeTab() === 'activity') {
-          <div class="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-indigo-600 rounded-full"></div>
+          <div class="tabs__indicator"></div>
         }
       </button>
     </div>
 
     <!-- Tab Content -->
-    <div class="p-4 sm:p-6 pb-28">
+    <div class="tab-content">
 
       <!-- Leaderboard Tab -->
       @if (activeTab() === 'leaderboard') {
         @if (leaderboard().length === 0) {
-          <div class="text-center py-12 text-gray-400">
-            <p class="text-sm">No participants yet. Be the first!</p>
+          <div class="empty-state">
+            <p class="empty-state__text">No participants yet. Be the first!</p>
           </div>
         } @else {
-          <div class="space-y-2">
+          <div class="leaderboard">
             @for (entry of leaderboard(); track entry.username; let i = $index) {
-              <div class="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100 transition-all hover:shadow-md"
-                   [class]="i === 0 ? 'ring-2 ring-amber-200 bg-amber-50/30' : ''">
-                <span class="text-xl w-8 text-center shrink-0" [class]="i < 3 ? 'text-2xl' : 'text-sm font-bold text-gray-400'">
+              <div
+                class="leaderboard__entry"
+                [class.leaderboard__entry--first]="i === 0"
+              >
+                <span class="leaderboard__rank" [class.leaderboard__rank--top]="i < 3">
                   {{ getRankEmoji(i) }}
                 </span>
-                <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-gray-900 truncate">{{ entry.username }}</p>
+                <div class="leaderboard__user">
+                  <p class="leaderboard__username">{{ entry.username }}</p>
                 </div>
-                <div class="text-right shrink-0">
-                  <span class="text-lg font-bold text-indigo-600">{{ entry.cumulativeTotal }}</span>
-                  <span class="text-xs text-gray-400 ml-1">{{ task()!.unitLabel }}</span>
+                <div class="leaderboard__score">
+                  <span class="leaderboard__total">{{ entry.cumulativeTotal }}</span>
+                  <span class="leaderboard__unit">{{ task()!.unitLabel }}</span>
                 </div>
               </div>
             }
@@ -98,41 +104,47 @@
       <!-- Achievements Tab -->
       @if (activeTab() === 'achievements') {
         @if (achievements().length === 0) {
-          <div class="text-center py-12 text-gray-400">
-            <p class="text-sm">No achievements configured for this task yet.</p>
+          <div class="empty-state">
+            <p class="empty-state__text">No achievements configured for this task yet.</p>
           </div>
         } @else {
-          <div class="space-y-3">
+          <div class="achievements">
             @for (achv of achievements(); track achv.id) {
               <div
-                class="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm border border-gray-100 transition-all"
-                [class]="isUnlocked(achv.id) ? 'ring-1 ring-indigo-200' : 'opacity-50 grayscale'"
+                class="achievement"
+                [class.achievement--unlocked]="isUnlocked(achv.id)"
+                [class.achievement--locked]="!isUnlocked(achv.id)"
               >
-                <!-- Badge Icon -->
-                <div class="relative w-12 h-12 rounded-full flex items-center justify-center shrink-0"
-                     [class]="isUnlocked(achv.id) ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-400'">
+                <div
+                  class="achievement__icon"
+                  [class.achievement__icon--unlocked]="isUnlocked(achv.id)"
+                >
                   @if (achv.typeName === 'SUPREMACY') {
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="achievement__svg" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd" />
                     </svg>
                   } @else {
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="achievement__svg" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
                   }
                 </div>
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2">
-                    <h4 class="font-semibold text-gray-900">{{ achv.name }}</h4>
-                    <span class="text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded"
-                          [class]="achv.typeName === 'SUPREMACY' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'">
+
+                <div class="achievement__body">
+                  <div class="achievement__title-row">
+                    <h4 class="achievement__name">{{ achv.name }}</h4>
+                    <span
+                      class="achievement__type-badge"
+                      [class.achievement__type-badge--supremacy]="achv.typeName === 'SUPREMACY'"
+                      [class.achievement__type-badge--threshold]="achv.typeName !== 'SUPREMACY'"
+                    >
                       {{ achv.typeName }}
                     </span>
                   </div>
                   @if (achv.description) {
-                    <p class="text-sm text-gray-500 mt-0.5">{{ achv.description }}</p>
+                    <p class="achievement__description">{{ achv.description }}</p>
                   }
-                  <p class="text-xs text-gray-400 mt-1">
+                  <p class="achievement__condition">
                     @if (achv.typeName === 'THRESHOLD') {
                       Reach {{ achv.thresholdValue }} {{ task()!.unitLabel }}
                     } @else {
@@ -140,15 +152,19 @@
                     }
                   </p>
                 </div>
-                <!-- Status -->
-                <div class="shrink-0">
+
+                <div class="achievement__status">
                   @if (isUnlocked(achv.id)) {
-                    <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    <div class="achievement__status-icon achievement__status-icon--unlocked">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
                     </div>
                   } @else {
-                    <div class="w-8 h-8 rounded-full bg-gray-100 text-gray-300 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" /></svg>
+                    <div class="achievement__status-icon achievement__status-icon--locked">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                      </svg>
                     </div>
                   }
                 </div>
@@ -160,18 +176,18 @@
 
       <!-- Activity Tab -->
       @if (activeTab() === 'activity') {
-        <div class="text-center py-12 text-gray-400">
-          <p class="text-sm">Activity feed coming soon.</p>
+        <div class="empty-state">
+          <p class="empty-state__text">Activity feed coming soon.</p>
         </div>
       }
     </div>
 
     <!-- Bottom Action Bar -->
-    <div class="fixed bottom-16 sm:bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-gray-200 p-3 flex gap-3 max-w-2xl mx-auto z-20">
-      <button (click)="joinTask()" class="flex-1 py-3 px-4 bg-gray-100 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-200 transition-all active:scale-95">
+    <div class="action-bar">
+      <button (click)="joinTask()" class="btn btn--ghost action-bar__btn">
         Join Task
       </button>
-      <button (click)="openProgressModal()" class="flex-1 py-3 px-4 bg-indigo-600 text-white text-sm font-semibold rounded-xl shadow-md shadow-indigo-600/20 hover:bg-indigo-700 transition-all active:scale-95">
+      <button (click)="openProgressModal()" class="btn btn--primary action-bar__btn">
         Log Progress
       </button>
     </div>

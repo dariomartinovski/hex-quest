@@ -6,9 +6,9 @@ import { TaskService } from '../../core/services/task.service';
 
 @Component({
   selector: 'app-add-task',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './add-task.html'
+  templateUrl: './add-task.html',
+  styleUrl: './add-task.scss',
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class AddTaskComponent {
   private fb = inject(FormBuilder);

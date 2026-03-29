@@ -1,0 +1,267 @@
+@use '../../../styles/variables' as *;
+
+.dashboard {
+  padding: 1rem 1.5rem;
+  max-width: 42rem;
+  margin: 0 auto;
+
+  &__header {
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $gray-900;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.25rem;
+  }
+
+  &__subtitle {
+    font-size: 0.875rem;
+    color: $gray-500;
+    margin: 0;
+  }
+}
+
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton-card {
+  background: $white;
+  border-radius: $radius-2xl;
+  padding: 1.25rem;
+  border: 1px solid $gray-100;
+  box-shadow: $shadow-sm;
+  animation: pulse 1.5s ease-in-out infinite;
+
+  &__title {
+    height: 1.25rem;
+    background: $gray-200;
+    border-radius: $radius-md;
+    width: 50%;
+    margin-bottom: 0.75rem;
+  }
+
+  &__subtitle {
+    height: 0.75rem;
+    background: $gray-100;
+    border-radius: $radius-md;
+    width: 75%;
+    margin-bottom: 1rem;
+  }
+
+  &__avatars {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: $gray-200;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 0;
+
+  &__icon {
+    width: 5rem;
+    height: 5rem;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background-color: #eef2ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 2.5rem;
+      height: 2.5rem;
+      color: #818cf8;
+    }
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $gray-700;
+    margin: 0 0 0.25rem;
+  }
+
+  &__subtitle {
+    font-size: 0.875rem;
+    color: $gray-500;
+    margin: 0 0 1.5rem;
+  }
+
+  .btn {
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.task-card {
+  display: block;
+  background: $white;
+  border-radius: $radius-2xl;
+  padding: 1.25rem;
+  border: 1px solid $gray-100;
+  box-shadow: $shadow-sm;
+  text-decoration: none;
+  transition: $transition;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-color: #e0e7ff;
+
+    .task-card__name { color: $indigo-600; }
+    .task-card__arrow { background-color: #e0e7ff; }
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
+  &__name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0 0 0.125rem;
+    transition: color 0.15s ease;
+  }
+
+  &__meta {
+    font-size: 0.75rem;
+    color: $gray-400;
+    margin: 0;
+  }
+
+  &__arrow {
+    flex-shrink: 0;
+    margin-left: 0.75rem;
+    padding: 0.5rem;
+    border-radius: $radius-xl;
+    background-color: #eef2ff;
+    color: $indigo-600;
+    transition: $transition;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      display: block;
+    }
+  }
+
+  &__description {
+    font-size: 0.875rem;
+    color: $gray-500;
+    margin: 0 0 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__achievements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid $gray-50;
+  }
+}
+
+.achievement-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: $gray-100;
+  color: $gray-400;
+  box-shadow: 0 0 0 1px $gray-200;
+  opacity: 0.5;
+  filter: grayscale(1);
+  transition: $transition;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  &--unlocked {
+    background-color: #eef2ff;
+    color: #4338ca;
+    box-shadow: 0 0 0 1px #c7d2fe;
+    opacity: 1;
+    filter: none;
+  }
+}
+
+.fab {
+  position: fixed;
+  bottom: 6rem;
+  right: 1.25rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: $indigo-600;
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.4);
+  text-decoration: none;
+  transition: $transition;
+  z-index: 30;
+
+  svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  &:hover {
+    background-color: $indigo-700;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @media (min-width: 640px) {
+    bottom: 2rem;
+    right: 2rem;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}

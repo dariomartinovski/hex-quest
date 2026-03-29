@@ -1,0 +1,100 @@
+@use '../../../../styles/variables' as *;
+
+.register-page {
+  min-height: 100vh;
+  background-color: $gray-50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+
+  &__blob {
+    position: absolute;
+    width: 30rem;
+    height: 30rem;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.2;
+    animation: blob 7s infinite ease-in-out;
+    top: 50%;
+    transform: translateY(-50%);
+
+    &--left {
+      left: -8rem;
+      background-color: #a5b4fc;
+    }
+
+    &--right {
+      right: -8rem;
+      background-color: #d8b4fe;
+      animation-delay: 4s;
+    }
+  }
+}
+
+.register-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 28rem;
+  background: rgba($white, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: $radius-3xl;
+  border: 1px solid rgba($white, 0.4);
+  box-shadow: $shadow-card;
+  overflow: hidden;
+  transition: $transition;
+
+  &__body {
+    padding: 2.5rem;
+  }
+
+  &__footer {
+    padding: 1.25rem 2.5rem;
+    background: rgba($gray-50, 0.8);
+    border-top: 1px solid rgba($gray-100, 0.6);
+    backdrop-filter: blur(8px);
+    text-align: center;
+
+    p {
+      font-size: 0.875rem;
+      color: $gray-600;
+      margin: 0;
+    }
+
+    a {
+      font-weight: 700;
+      color: $indigo-600;
+      text-decoration: none;
+      transition: $transition-fast;
+
+      &:hover { color: $indigo-500; }
+    }
+  }
+}
+
+.register-header {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: $gray-900;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: $gray-500;
+    margin: 0;
+  }
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}

@@ -1,0 +1,455 @@
+@use '../../../styles/variables' as *;
+
+// ─── Host / Wrapper ──────────────────────────────────────────────────────────
+
+.task-detail {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+// ─── Skeleton Loading ────────────────────────────────────────────────────────
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.skeleton {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  &__title {
+    height: 2rem;
+    background-color: $gray-200;
+    border-radius: $radius-md;
+    width: 50%;
+  }
+
+  &__subtitle {
+    height: 1rem;
+    background-color: $gray-100;
+    border-radius: $radius-md;
+    width: 75%;
+  }
+
+  &__body {
+    height: 12rem;
+    background-color: $gray-100;
+    border-radius: $radius-2xl;
+    margin-top: 1.5rem;
+  }
+}
+
+// ─── Task Header ─────────────────────────────────────────────────────────────
+
+.task-header {
+  background: linear-gradient(135deg, $indigo-600, $indigo-700);
+  color: $white;
+  padding: 1.5rem;
+  padding-bottom: 2rem;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    transition: $transition;
+
+    &:hover {
+      color: $white;
+    }
+  }
+
+  &__back-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+
+  &__description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    margin: 0.25rem 0 0;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    backdrop-filter: blur(4px);
+  }
+
+  &__badge-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+// ─── Tabs ────────────────────────────────────────────────────────────────────
+
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: $white;
+  border-bottom: 1px solid $gray-200;
+  display: flex;
+
+  &__btn {
+    flex: 1;
+    padding: 0.875rem 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    color: $gray-500;
+    transition: $transition;
+
+    &:hover {
+      color: $gray-700;
+    }
+
+    &--active {
+      color: $indigo-600;
+    }
+  }
+
+  &__indicator {
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background-color: $indigo-600;
+    border-radius: 9999px;
+  }
+}
+
+// ─── Tab Content ─────────────────────────────────────────────────────────────
+
+.tab-content {
+  padding: 1rem;
+  padding-bottom: 7rem;
+
+  @media (min-width: 640px) {
+    padding: 1.5rem;
+    padding-bottom: 7rem;
+  }
+}
+
+// ─── Empty State ─────────────────────────────────────────────────────────────
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 0;
+
+  &__text {
+    font-size: 0.875rem;
+    color: $gray-400;
+    margin: 0;
+  }
+}
+
+// ─── Leaderboard ─────────────────────────────────────────────────────────────
+
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__entry {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: $white;
+    border-radius: $radius-xl;
+    padding: 1rem;
+    box-shadow: $shadow-sm;
+    border: 1px solid $gray-100;
+    transition: $transition;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    &--first {
+      outline: 2px solid $amber-200;
+      background-color: rgba(255, 251, 235, 0.3);
+    }
+  }
+
+  &__rank {
+    font-size: 1.25rem;
+    width: 2rem;
+    text-align: center;
+    flex-shrink: 0;
+
+    &--top {
+      font-size: 1.5rem;
+    }
+
+    &:not(&--top) {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: $gray-400;
+    }
+  }
+
+  &__user {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__username {
+    font-weight: 600;
+    color: $gray-900;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__score {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  &__total {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: $indigo-600;
+  }
+
+  &__unit {
+    font-size: 0.75rem;
+    color: $gray-400;
+    margin-left: 0.25rem;
+  }
+}
+
+// ─── Achievements ─────────────────────────────────────────────────────────────
+
+.achievements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.achievement {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: $white;
+  border-radius: $radius-xl;
+  padding: 1rem;
+  box-shadow: $shadow-sm;
+  border: 1px solid $gray-100;
+  transition: $transition;
+
+  &--unlocked {
+    outline: 1px solid $indigo-200;
+  }
+
+  &--locked {
+    opacity: 0.5;
+    filter: grayscale(1);
+  }
+
+  &__icon {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background-color: $gray-100;
+    color: $gray-400;
+
+    &--unlocked {
+      background-color: $indigo-100;
+      color: $indigo-600;
+    }
+  }
+
+  &__svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__name {
+    font-weight: 600;
+    color: $gray-900;
+    margin: 0;
+  }
+
+  &__type-badge {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    padding: 0.125rem 0.375rem;
+    border-radius: $radius-sm;
+
+    &--supremacy {
+      background-color: $amber-100;
+      color: $amber-700;
+    }
+
+    &--threshold {
+      background-color: $indigo-100;
+      color: $indigo-700;
+    }
+  }
+
+  &__description {
+    font-size: 0.875rem;
+    color: $gray-500;
+    margin: 0.125rem 0 0;
+  }
+
+  &__condition {
+    font-size: 0.75rem;
+    color: $gray-400;
+    margin: 0.25rem 0 0;
+  }
+
+  &__status {
+    flex-shrink: 0;
+  }
+
+  &__status-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    &--unlocked {
+      background-color: $green-100;
+      color: $green-600;
+    }
+
+    &--locked {
+      background-color: $gray-100;
+      color: $gray-200;
+    }
+  }
+}
+
+// ─── Action Bar ───────────────────────────────────────────────────────────────
+
+.action-bar {
+  position: fixed;
+  bottom: 4rem;
+  left: 0;
+  right: 0;
+  max-width: 42rem;
+  margin: 0 auto;
+  z-index: 20;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid $gray-200;
+  padding: 0.75rem;
+  display: flex;
+  gap: 0.75rem;
+
+  @media (min-width: 640px) {
+    bottom: 0;
+  }
+
+  &__btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-radius: $radius-xl;
+  }
+}
+
+// ─── Shared btn overrides (component-level padding/flex) ─────────────────────
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition;
+  text-decoration: none;
+  border-radius: $radius-xl;
+
+  &--primary {
+    background-color: $indigo-600;
+    color: $white;
+    box-shadow: $shadow-indigo;
+
+    &:hover:not(:disabled) {
+      background-color: $indigo-700;
+    }
+  }
+
+  &--ghost {
+    background-color: $gray-100;
+    color: $gray-700;
+
+    &:hover:not(:disabled) {
+      background-color: $gray-200;
+      color: $gray-900;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+}

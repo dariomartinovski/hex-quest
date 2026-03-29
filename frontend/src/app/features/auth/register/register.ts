@@ -6,9 +6,9 @@ import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './register.html'
+  templateUrl: './register.html',
+  styleUrl: './register.scss',
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder);
@@ -28,7 +28,7 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.registerForm.invalid) return;
-    
+
     this.isSubmitting = true;
     this.errorMsg = null;
 

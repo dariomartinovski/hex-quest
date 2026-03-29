@@ -1,82 +1,74 @@
-<!-- Backdrop -->
-<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center" (click)="onBackdropClick($event)">
-  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-backdrop__overlay"></div>
 
-  <!-- Modal Content (Bottom Sheet style on mobile) -->
-  <div class="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl p-6 pb-8 sm:p-8 z-10 animate-slide-up">
+  <div class="modal">
 
-    <!-- Success State -->
     @if (showSuccess()) {
-      <div class="flex flex-col items-center justify-center py-8">
-        <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-4 animate-bounce-in">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+      <div class="success-state">
+        <div class="success-state__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
           </svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900">Progress Logged!</h3>
-        <p class="text-sm text-gray-500 mt-1">+{{ delta() }} {{ unitLabel }}</p>
+        <h3 class="success-state__title">Progress Logged!</h3>
+        <p class="success-state__subtitle">+{{ delta() }} {{ unitLabel }}</p>
       </div>
+
     } @else {
 
-      <!-- Handle Bar (mobile) -->
-      <div class="flex justify-center mb-4 sm:hidden">
-        <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+      <div class="modal-handle">
+        <div class="modal-handle__bar"></div>
       </div>
 
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-bold text-gray-900">Log Progress</h3>
-        <button (click)="close.emit()" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+      <div class="modal-header">
+        <h3 class="modal-header__title">Log Progress</h3>
+        <button class="modal-header__close" (click)="close.emit()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </div>
 
-      <!-- Delta Display -->
-      <div class="text-center mb-6">
-        <div class="text-5xl font-extrabold text-indigo-600 tabular-nums">{{ delta() }}</div>
-        <p class="text-sm text-gray-400 mt-1">{{ unitLabel }}</p>
+      <div class="delta-display">
+        <div class="delta-display__value">{{ delta() }}</div>
+        <p class="delta-display__unit">{{ unitLabel }}</p>
       </div>
 
-      <!-- Quick Add Buttons -->
-      <div class="flex justify-center gap-3 mb-6">
-        <button (click)="quickAdd(1)" class="px-5 py-2.5 bg-indigo-50 text-indigo-700 font-bold text-sm rounded-xl hover:bg-indigo-100 active:scale-95 transition-all">+1</button>
-        <button (click)="quickAdd(5)" class="px-5 py-2.5 bg-indigo-50 text-indigo-700 font-bold text-sm rounded-xl hover:bg-indigo-100 active:scale-95 transition-all">+5</button>
-        <button (click)="quickAdd(10)" class="px-5 py-2.5 bg-indigo-50 text-indigo-700 font-bold text-sm rounded-xl hover:bg-indigo-100 active:scale-95 transition-all">+10</button>
-        <button (click)="setDelta(1)" class="px-4 py-2.5 bg-gray-100 text-gray-600 font-bold text-sm rounded-xl hover:bg-gray-200 active:scale-95 transition-all">Reset</button>
+      <div class="quick-add">
+        <button class="quick-add__btn quick-add__btn--add" (click)="quickAdd(1)">+1</button>
+        <button class="quick-add__btn quick-add__btn--add" (click)="quickAdd(5)">+5</button>
+        <button class="quick-add__btn quick-add__btn--add" (click)="quickAdd(10)">+10</button>
+        <button class="quick-add__btn quick-add__btn--reset" (click)="setDelta(1)">Reset</button>
       </div>
 
-      <!-- Custom Input -->
-      <div class="mb-4">
-        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Custom Amount</label>
+      <div class="form-field">
+        <label>Custom Amount</label>
         <input
           type="number"
           [ngModel]="delta()"
           (ngModelChange)="setDelta($event)"
           min="1"
-          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-center text-lg font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+          style="text-align: center; font-size: 1.125rem; font-weight: 700;"
         >
       </div>
 
-      <!-- Note -->
-      <div class="mb-6">
-        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Note (optional)</label>
+      <div class="form-field" style="margin-bottom: 1.5rem;">
+        <label>Note (optional)</label>
         <input
           type="text"
           [ngModel]="note()"
           (ngModelChange)="note.set($event)"
           placeholder="e.g. Won against John"
-          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
         >
       </div>
 
-      <!-- Submit -->
       <button
+        class="modal-record-btn"
         (click)="submit()"
         [disabled]="isSubmitting() || delta() <= 0"
-        class="w-full py-3.5 bg-indigo-600 text-white text-sm font-bold rounded-xl shadow-md shadow-indigo-600/20 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
       >
         @if (isSubmitting()) {
-          <svg class="animate-spin mx-auto h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg class="modal-record-btn__spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
@@ -84,6 +76,8 @@
           Record +{{ delta() }} {{ unitLabel }}
         }
       </button>
+
     }
+
   </div>
 </div>

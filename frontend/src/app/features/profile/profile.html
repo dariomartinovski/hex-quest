@@ -1,0 +1,99 @@
+<div class="profile">
+
+  @if (currentUser()) {
+
+    <div class="profile-card">
+      <div class="profile-card__avatar-wrapper">
+        @if (currentUser()?.avatarUrl) {
+          <img [src]="currentUser()?.avatarUrl" class="profile-card__avatar-img">
+        } @else {
+          <div class="profile-card__avatar-placeholder">
+            {{ currentUser()?.username?.charAt(0) | uppercase }}
+          </div>
+        }
+      </div>
+
+      <h3 class="profile-card__name">{{ currentUser()?.displayName || currentUser()?.username }}</h3>
+      <p class="profile-card__email">{{ currentUser()?.email }}</p>
+
+      <div class="profile-card__details">
+        <h4 class="profile-card__details-label">Details</h4>
+        <div class="profile-card__detail-list">
+          <div class="detail-row">
+            <span class="detail-row__key">Username</span>
+            <span class="detail-row__value">{{ currentUser()?.username }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-row__key">Sex</span>
+            <span class="detail-row__value">{{ currentUser()?.sex || 'Not specified' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <button (click)="logout()" class="logout-btn">Sign Out</button>
+    </div>
+
+    <div class="achievement-wall">
+      <div class="achievement-wall__header">
+        <h3 class="achievement-wall__title">Achievement Wall</h3>
+        <span class="achievement-wall__count">{{ earnedAchievements().length }} Earned</span>
+      </div>
+
+      <div class="category-filter">
+        <button
+          class="category-filter__btn"
+          [class.category-filter__btn--active]="selectedCategory() === null"
+          (click)="selectedCategory.set(null)"
+        >
+          All
+        </button>
+        @for (cat of categories(); track cat.id) {
+          <button
+            class="category-filter__btn"
+            [class.category-filter__btn--active]="selectedCategory() === cat.id"
+            (click)="selectedCategory.set(cat.id)"
+          >
+            {{ cat.name }}
+          </button>
+        }
+      </div>
+
+      @if (filteredAchievements().length === 0) {
+        <div class="achievement-empty">
+          <p>No achievements earned yet in this category.</p>
+        </div>
+      } @else {
+        <div class="achievement-grid">
+          @for (ua of filteredAchievements(); track ua.id) {
+            <div class="achievement-tile">
+              <div
+                class="achievement-tile__icon"
+                [class.achievement-tile__icon--supremacy]="ua.achievement.typeName === 'SUPREMACY'"
+                [class.achievement-tile__icon--threshold]="ua.achievement.typeName !== 'SUPREMACY'"
+              >
+                @if (ua.achievement.badgeImageUrl) {
+                  <img [src]="ua.achievement.badgeImageUrl" class="achievement-tile__badge-img">
+                } @else if (ua.achievement.typeName === 'SUPREMACY') {
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd" />
+                  </svg>
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                }
+              </div>
+              <p class="achievement-tile__type">{{ ua.achievement.typeName }}</p>
+              <h4 class="achievement-tile__name">{{ ua.achievement.name }}</h4>
+              @if (ua.awardedAt) {
+                <p class="achievement-tile__date">{{ ua.awardedAt | date:'mediumDate' }}</p>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  }
+
+</div>

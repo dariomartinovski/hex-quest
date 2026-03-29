@@ -1,0 +1,122 @@
+@use '../../../../styles/variables' as *;
+
+.login-page {
+  min-height: 100vh;
+  background-color: $gray-50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+
+  &__blob {
+    position: absolute;
+    width: 24rem;
+    height: 24rem;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+    animation: blob 8s infinite ease-in-out;
+
+    &--top {
+      top: -8rem;
+      left: -8rem;
+      background-color: #a5b4fc;
+    }
+
+    &--bottom {
+      bottom: -8rem;
+      right: -8rem;
+      background-color: #d8b4fe;
+      animation-delay: 2s;
+    }
+  }
+}
+
+.login-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 28rem;
+  background: rgba($white, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: $radius-3xl;
+  border: 1px solid rgba($white, 0.4);
+  box-shadow: $shadow-card;
+  overflow: hidden;
+  transition: $transition;
+
+  &:hover {
+    box-shadow: $shadow-card, $shadow-indigo;
+  }
+
+  &__body {
+    padding: 2.5rem;
+  }
+
+  &__footer {
+    padding: 1.5rem 2.5rem;
+    background: rgba($gray-50, 0.8);
+    border-top: 1px solid rgba($gray-100, 0.6);
+    backdrop-filter: blur(8px);
+    text-align: center;
+
+    p {
+      font-size: 0.875rem;
+      color: $gray-600;
+    }
+
+    a {
+      font-weight: 700;
+      color: $indigo-600;
+      text-decoration: none;
+      transition: $transition-fast;
+
+      &:hover { color: $indigo-500; }
+    }
+  }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: $radius-2xl;
+    background-color: $indigo-600;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.4);
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+      color: $white;
+    }
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: $gray-900;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: $gray-500;
+    margin: 0;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

@@ -8,8 +8,9 @@ import { AchievementService, AchievementResponse, UserAchievementResponse } from
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './dashboard.html'
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.scss',
+  imports: [CommonModule, RouterModule]
 })
 export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);

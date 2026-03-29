@@ -10,8 +10,9 @@ import { AchievementUnlockOverlayComponent } from '../achievement-unlock-overlay
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, LogProgressModalComponent, AchievementUnlockOverlayComponent],
-  templateUrl: './task-detail.html'
+  templateUrl: './task-detail.html',
+  styleUrl: './task-detail.scss',
+  imports: [CommonModule, RouterModule, LogProgressModalComponent, AchievementUnlockOverlayComponent]
 })
 export class TaskDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
